@@ -2,20 +2,18 @@
 <input type="button" value="GET" onclick="sendGet()"/>
 <script>
 function sendPost(){
-  let headers = new Headers();
-  headers.append("Content-Type", "application/json");
-  let body = {
-    help: true
-  };
+  let headers = new Headers(), body = {help: true};
+  headers.append("Content-Type", "text/plain"); //IMPORTANT to have text/plain
   let options = {
     method: "POST",
     headers: headers,
     mode: "cors",
     cache: "no-cache",
     body: JSON.stringify(body)
-  }
-  fetch("https://script.google.com/macros/s/AKfycbxJ0gi8fMMqMXGEw5zeaGUjvSDR48suoKsyWrjyLuQ/dev", options).then(res=>res.ok && console.log(res) || console.log("not ok"));
+  };
+  fetch("https://script.google.com/macros/s/AKfycbxJ0gi8fMMqMXGEw5zeaGUjvSDR48suoKsyWrjyLuQ/dev", options).then(res=>res.ok && res.text().then(text=>console.log(text)) || console.log("not ok"));
 }
+
 function sendGet(){
   fetch("https://script.google.com/macros/s/AKfycbxJ0gi8fMMqMXGEw5zeaGUjvSDR48suoKsyWrjyLuQ/dev?help=true").then(res=>res.ok && console.log(res) || console.log("not ok"));
 }
