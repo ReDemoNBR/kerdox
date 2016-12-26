@@ -4,7 +4,7 @@
 <script>
 function sendPost(test=false){
   let kerdoxDev = "https://script.google.com/macros/s/AKfycbxJ0gi8fMMqMXGEw5zeaGUjvSDR48suoKsyWrjyLuQ/dev";
-  let test = "https://script.google.com/macros/s/AKfycbxQxe6Q_4rzfZoYGB97UIGWMRubeZpNE2GpgXqDUFxhWglMan0/exec"
+  let testDev = "https://script.google.com/macros/s/AKfycbxQxe6Q_4rzfZoYGB97UIGWMRubeZpNE2GpgXqDUFxhWglMan0/exec"
   let headers = new Headers();
   let body = {help: true};
   headers.append("Content-Type", "text/plain"); //IMPORTANT to have text/plain
@@ -15,7 +15,7 @@ function sendPost(test=false){
     cache: "no-cache",
     body: JSON.stringify(body)
   };
-  fetch(test || kerdoxDev, options).then(res=>res.ok && res.text().then(text=>console.log(text)) || console.log("not ok"));
+  fetch(test && testDev || kerdoxDev, options).then(res=>res.ok && res.text().then(text=>console.log(text)) || console.log("not ok"));
 }
 
 function sendGet(){
