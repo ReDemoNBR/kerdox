@@ -1,8 +1,12 @@
 <input type="button" value="POST" onclick="sendPost()"/>
 <input type="button" value="GET" onclick="sendGet()"/>
+<input type="button" value="POST(t)" onclick="sendPost(true)"/>
 <script>
-function sendPost(){
-  let headers = new Headers(), body = {help: true};
+function sendPost(test=false){
+  let kerdoxDev = "https://script.google.com/macros/s/AKfycbxJ0gi8fMMqMXGEw5zeaGUjvSDR48suoKsyWrjyLuQ/dev";
+  let test = "https://script.google.com/macros/s/AKfycbxQxe6Q_4rzfZoYGB97UIGWMRubeZpNE2GpgXqDUFxhWglMan0/exec"
+  let headers = new Headers();
+  let body = {help: true};
   headers.append("Content-Type", "text/plain"); //IMPORTANT to have text/plain
   let options = {
     method: "POST",
@@ -11,7 +15,7 @@ function sendPost(){
     cache: "no-cache",
     body: JSON.stringify(body)
   };
-  fetch("https://script.google.com/macros/s/AKfycbxJ0gi8fMMqMXGEw5zeaGUjvSDR48suoKsyWrjyLuQ/dev", options).then(res=>res.ok && res.text().then(text=>console.log(text)) || console.log("not ok"));
+  fetch(test || kerdoxDev, options).then(res=>res.ok && res.text().then(text=>console.log(text)) || console.log("not ok"));
 }
 
 function sendGet(){
