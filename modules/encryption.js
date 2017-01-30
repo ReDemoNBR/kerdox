@@ -1,5 +1,5 @@
 const RNG = require("./RNG");
-const {convertToSHA256_Hex, encodeBase64} = require("../utils");
+const {computeSHA256, encodeBase64} = require("../utils");
 
 function encrypt(message, key){
   RNG.setTempSeed(convertToSHA256_Hex(key.toString()).substring(32));

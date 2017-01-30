@@ -1,7 +1,6 @@
 const RNG = require("./RNG");
-const {convertToSHA256_Hex, decodeBase64} = require("../utils");
+const {computeSHA256, decodeBase64} = require("../utils");
 
-let _seed;
 
 function decrypt(message, key){
   let decoded = decodeBase64(message.toString()), byteArray = [];

@@ -1,11 +1,11 @@
 const fetch = require("node-fetch");
-const CONST = require("./constants");
-const Utils = require("./utils");
+const Constants = require("./constants");
+const NumberTreatment = require("./number-treatment");
 
 
 
 function generateSeed(){
-  let DB = JSON.parse(require("fs").readFileSync(CONST.CITIES)), rnd = BigNumber(_seed, 16).mod(BigNumber(DB.length, 10)).toNumber(), seed;
+  let DB = JSON.parse(require("fs").readFileSync(Constants.CITIES_JSON)), rnd = BigNumber(_seed, 16).mod(BigNumber(DB.length, 10)).toNumber(), seed;
   let Seeder = require("./seeder");
   do{
     let city = DB[rnd];
@@ -19,7 +19,7 @@ function generateSeed(){
 
 
 function openWeatherMapSeed(id){
-  return fetch(`${CONST.OPEN_WEATHER_MAP.getFetchUrl()}&id=${id}`).then(res=>{
+  return fetch(`${Constants.OPEN_WEATHER_MAP.getFetchUrl()}&id=${id}`).then(res=>{
     if(!res.ok) return false;
     return res.json().then(weather=>{
       let {main, clouds, wind, sys, rain} = weather;
@@ -31,7 +31,7 @@ function openWeatherMapSeed(id){
 
 
 function aerisSeed(latitude, longitude){
-  return fetch(`${CONST.AERIS_WEATHER.getFetchUrl()}&p=${Math.round(latitude*100)/100},${Math.round(longitude*100)/100}`).then(res => {
+  return fetch(`${Constants.AERIS_WEATHER.getFetchUrl()}&p=${Math.round(latitude*100)/100},${Math.round(longitude*100)/100}`).then(res => {
     if(!res.ok) return false;
     return res.json().then(weather=>{
       return convertValuesToKelvin([weather.tempC, weather.dewpointC, weather.windchillC, weather.heatindexC])+getValues([weather.pressureMB,
@@ -45,7 +45,7 @@ function aerisSeed(latitude, longitude){
 function convertValues(values){
   let chunk = "";
   for(let i=0; i<values.length; i++)
-    chunk += Utils.removeNonDigits(values[i]);
+    chunk += NumberTreatment.removeNonDigits(values[i]);
   return chunk;
 }
 
@@ -53,7 +53,7 @@ function convertValues(values){
 function convertValuesToKelvin(values){
   let chunk = "";
   for(let i=0; i<values.length; i++)
-    chunk += Utils.celsiusToKelvin(Utils.removeNonDigits(values[i]));
+    chunk += NumberTreatment.celsiusToKelvin(NumberTreatment.removeNonDigits(values[i]));
   return chunk;
 }
 
@@ -62,4 +62,4 @@ let out = generateSeed;
 out.aerisSeed = aerisSeed;
 out.openWeatherMapSeed = openWeatherMapSeed;
 
-module.exports = obj;
+module.exports = out;
