@@ -1,4 +1,4 @@
-const {decryption, encryption, picker: pick, RNG, RNG256, shuffle} = require("./modules");
+const {decryption, encryption, initialize, picker: pick, RNG, RNG256, shuffle} = require("./modules");
 
 
 // decrypt({String} message, {String} key) --> decrypts a message that was encrypted in Kerdox with the given key
@@ -36,14 +36,6 @@ function picker(quantity, ...args){
   else [list, quantity, repetition] = [quantity, Math.floor(Math.abs(args[0])) || 1, Boolean(args[1])];
   let out = pick(list, quantity, repetition);
   return args[0] && out || out[0];
-  /*let result = [];
-  if(repetition){
-    let len = list.length;
-    while(quantity--) result.push(list[random("0", len)])
-    return result;
-  }
-  while(quantity--) result.push(list.splice(random("0", String(list.length), 1)));
-  return !args[0] && result[0] || result;*/
 }
 
 
@@ -69,7 +61,7 @@ function randomFloat256(min, max){
     else [min, max] = ["0", min];
   }
   console.log(`generating a random float: [${min}, ${max}[`);
-  return RNG.randomNumber(String(min), String(max), "float");
+  return RNG256.randomNumber(String(min), String(max), "float");
 }
 
 
@@ -82,7 +74,7 @@ function randomInt(min, max){
     else [min, max] = ["0", min];
   }
   console.log(`generating a random integer: [${min}, ${max}[`);
-  return out;
+  return RNG.randomNumber(String(min), String(max), "int");
 }
 
 
@@ -95,7 +87,7 @@ function randomInt256(min, max){
     else [min, max] = ["0", min];
   }
   console.log(`generating a random integer: [${min}, ${max}[`);
-  return out;
+  return RNG256.randomNumber(String(min), String(max), "int");
 }
 
 
@@ -119,9 +111,18 @@ function shuffler(...args){
 }
 
 
+// require("node-persist").clearSync();
+// console.log("hello world");
+// console.log(randomFloat().toString());
+
+
 module.exports = {
-  decrypt: decrypt,
-  encrypt: encrypt,
+  Cypher: {
+    decrypt: decrypt,
+    encrypt: encrypt
+  },
+  init: initialize,
+  initialize: initialize,
   RNG: {
     float: randomFloat,
     getDecimalPlaces: getDecimalPlaces,
@@ -134,6 +135,6 @@ module.exports = {
     int: randomInt256,
     setDecimalPlaces: setDecimalPlaces256
   },
-  picker: picker,
-  shuffler: shuffler
+  Picker: picker,
+  Shuffler: shuffler
 };
