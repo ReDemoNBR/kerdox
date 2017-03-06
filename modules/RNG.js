@@ -60,7 +60,6 @@ function randomNumber(min, max, type, ignoreCount=false){
   return new KerdoxNumber(type=="float" && floatNumber(operation.substring(0, 32), min, max) || intNumber(operation.substring(0, 32), min, max));
 }
 
-
 function setDecimalPlaces(places){
   BigNumber.config({DECIMAL_PLACES: places});
 }

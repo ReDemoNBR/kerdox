@@ -51,7 +51,6 @@ function randomFloat(min, max){
   return RNG.randomNumber(String(min), String(max), "float");
 }
 
-
 // randomFloat({String|Number} min, {String|Number} max) --> generates a random float number from the interval of [min, max[
 // randomFloat({String|Number} max) --> generates a random float number from the interval of [0, max[
 // randomFloat() --> generates a random float number from the interval of [0,1[

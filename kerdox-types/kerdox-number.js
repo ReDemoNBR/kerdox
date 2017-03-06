@@ -4,7 +4,7 @@ BigNumber.config({ERRORS: false, EXPONENTIAL_AT: 100});
 
 
 function KerdoxNumber(number){
-  // kdx is the true value and the rest are shortcuts
+  // kdx is the true value and the rest are shortcuts... K=this, P=KerdoxNumber.prototype, N=Number, B=BigNumber
   let [kdx, K, P, N, B] = [String(number), this, this.prototype, Number, BigNumber];
 
   K.absolute = K.abs = function(){return new K(kdx.toString()=="-" && kdx.substring(1) || kdx.toString());};
