@@ -1,11 +1,11 @@
-const [BigNumber, storage, Utils, {KerdoxNumber}] = [require("bignumber.js").another(), require("node-persist"), require("../utils"), require("../kerdox-types")];
+const [BigNumber, storage, Utils, {KerdoxNumber}, {MAX_BIG}] = [require("bignumber.js").another(), require("node-persist"), require("../utils"), require("../kerdox-types"), require("../constants")];
 
 // shortcut
 const SHA3 = Utils.computeSHA3;
 
 
 //init configs
-BigNumber.config({ERRORS: false, DECIMAL_PLACES: 20, EXPONENTIAL_AT: 100});
+BigNumber.config({ERRORS: false, DECIMAL_PLACES: 40, EXPONENTIAL_AT: 100});
 storage.initSync();
 
 //global variables
@@ -15,7 +15,7 @@ let _seed, _count, _tempSeed;
 function floatNumber(value, min, max){
     min = BigNumber(min, 10);
     // operation below: (value / (2 ** 127)) * (max - min) + min
-    return BigNumber(value, 16).div(require("../constants").MAX_BIG).times(BigNumber(max, 10).minus(min)).plus(min).toString();
+    return BigNumber(value, 16).div(MAX_BIG).times(BigNumber(max, 10).minus(min)).plus(min).toString();
 }
 
 
@@ -37,7 +37,6 @@ function randomNumber(min, max, type, ignoreCount=false){
     if(BigNumber(min, 10).comparedTo(BigNumber(max, 10))==1) [min, max] = [max, min];
     if(min==max) [min, max] = ["0", "1"];
 
-    console.log(`RNG.js --> randomNumber(${min}, ${max}, ${type})`);
     let seed;
     if(ignoreCount) seed = _tempSeed;
     else if(!_count){
@@ -45,7 +44,6 @@ function randomNumber(min, max, type, ignoreCount=false){
         _count = Number(storage.getItemSync("count")) || parseInt(Utils.seeder.consumePool(16), 16);
     }
     else seed = _seed;
-    console.log(`seed = ${seed}`);
     let operation = SHA3(seed);
 
     if(!ignoreCount){

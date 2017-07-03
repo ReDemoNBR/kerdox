@@ -5,3 +5,4 @@ test*.js
 test.js
 test*.json
 test.json
+.imdone

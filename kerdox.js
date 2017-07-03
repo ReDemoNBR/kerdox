@@ -32,13 +32,6 @@ function getDecimalPlaces(){
 }
 
 
-// gets the number of decimal places of the 256-bit floating-point RNG
-// function getDecimalPlaces256(){
-//     return RNG256.getDecimalPlaces();
-// }
-
-
-
 // function picker({Number} quantity, {Item} item1, {Item} item2, ..., {Item} itemX) --> Randomly picks a given quantity of items that were passed. If quantity is greater than the number of items, then it will allow repetition
 // function picker({Array} list, {Number} quantity, {Boolean} repetition) --> Randomly picks a given a given quantity of items from a given list, allowing or not repetition
 // function picker({Array} list, {Number} quantity) --> Randomly picks a given quantity of items from a given list, without repetition.
@@ -73,7 +66,6 @@ function randomInt(min, max){
         if(!min) [min, max] = ["0", "4294967296"];
         else [min, max] = ["0", min];
     }
-    console.log(`generating a random integer: [${min}, ${max}[`);
     return RNG.randomNumber(String(min), String(max), "int");
 }
 
