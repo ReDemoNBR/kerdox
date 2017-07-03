@@ -1,3 +1,3 @@
 module.exports = {
-  KerdoxNumber: require("./kerdox-number")
+    KerdoxNumber: require("./number")
 };

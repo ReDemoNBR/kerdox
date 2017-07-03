@@ -1,4 +1,4 @@
-const [fetch, seeder, storage] = [require("node-fetch"), require("../utils/seeder"), require("node-persist")];
+const [seeder, storage] = [require("../utils/seeder"), require("node-persist")];
 
 // function init(cb){
 //   let [len, url, array] = [10, "https://script.google.com/macros/s/AKfycbwL7RIptTjOcXnNlhoCQOQNRA_nE9qcKsVgS06pPi9e3xZszc9V/exec", []];
@@ -14,12 +14,12 @@ const [fetch, seeder, storage] = [require("node-fetch"), require("../utils/seede
 // }
 
 function init(cb){
-  return Promise.resolve(seeder.generateEntropy()).then(ret=>{
-    console.log(ret);
-    console.log("init completed");
-    if(cb && typeof cb==="function") return cb();
-    return new Promise((res,rej)=>res());
-  }).catch(e=>console.log("INIT") || console.log(e));
+    storage.initSync();
+    storage.clearSync();
+    return Promise.resolve(seeder.populatePool()).then(()=>{
+        if(cb && typeof cb==="function") return cb();
+        return new Promise((res, rej)=>res());
+    }).catch(e=>console.log("INIT") || console.log(e));
 }
 
 
