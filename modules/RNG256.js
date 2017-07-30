@@ -7,7 +7,7 @@
 // //global variables
 // let _seed, _count, _tempSeed;
 //
-// //TODO: use MAX_BIG_256 instead of MAX_BIG and check if Constants is used anywhere but in here.
+// //TODO:20 use MAX_BIG_256 instead of MAX_BIG and check if Constants is used anywhere but in here.
 // function floatNumber(value, min, max){
 //     min = BigNumber(min, 10);
 //     // operation below: (value / (2 ** 127)) * (max - min) + min
