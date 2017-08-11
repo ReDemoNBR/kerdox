@@ -1,16 +1,9 @@
-const [{decryption, encryption, initialize, picker: pick, RNG, shuffle}, credentials] = [require("./modules"), require("./credentials")];
+const [{decryption, encryption, initialize, initializeSync, picker: pick, RNG, shuffle, config: configuration}, cred] = [require("./modules"), require("./credentials")];
 
 
-//configures credentials for Aeris Weather and/or Open Weather Map
-function config({aerisWeather, openWeatherMap}){
-    if(aerisWeather){
-        const {clientId, clientSecret, active} = aerisWeather;
-        if(!clientId || !clientSecret) throw new Error("Aeris Weather requires clientId and clientSecret");
-        [credentials.aerisWeather.clientId, credentials.aerisWeather.clientSecret, credentials.aerisWeather.active] = [clientId, clientSecret, active!==undefined && active || true];
-    }
-    if(openWeatherMap)
-        if(!openWeatherMap.appId) throw new Error("Open Weather Map requires an appId");
-        else [credentials.openWeatherMap.appId, credentials.openWeatherMap.active] = [openWeatherMap.appId, openWeatherMap.active!==undefined && openWeatherMap.active || true];
+//configures credentials for weather APIs
+function config(configObject){
+    return configuration(configObject);
 }
 
 
@@ -26,7 +19,7 @@ function encrypt(message, key){
 }
 
 
-// gets the number of decimal places of the 128-bit floating-point RNG
+// gets the number of decimal places of the floating-point RNG
 function getDecimalPlaces(){
     return RNG.getDecimalPlaces();
 }
@@ -89,6 +82,8 @@ module.exports = {
     Cypher: {decrypt, encrypt},
     init: initialize,
     initialize,
+    initSync: initializeSync,
+    initializeSync,
     RNG: {
         float: randomFloat,
         getDecimalPlaces,

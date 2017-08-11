@@ -1,20 +1,22 @@
-const [{decode: base64Decode, encode: base64Encode}, decrypt, encrypt, CryptoJS, FS] = [
-    require("../utils/base64"), require("../modules/decryption"), require("../modules/encryption"), require("crypto-js"), require("FS")
-];
+//external modules
+const [CryptoJS, FS] = [require("crypto-js"), require("FS")];
+
+//internal modules
+const [{decode: base64Decode, encode: base64Encode}, decrypt, encrypt] = [require("../utils/base64"), require("../modules/decryption"), require("../modules/encryption")];
 
 function KerdoxMessage(message){
     this.value = message;
 }
 
-// TODO:0 Rename "KerdoxMessage" to "KerdoxStream"
+// TODO:50 Rename "KerdoxMessage" to "KerdoxStream" id:0
 // KerdoxMessage shortcuts
 const [K, P, PP] = [KerdoxMessage, KerdoxMessage.prototype, KerdoxMessage.prototype.__proto__];
 
 
 // KerdoxMessage methods
-// DOING:30 checksum of any stream
+// TODO:70 checksum of any stream id:1
 K.checksum = function(data, algorithm){
-    return CryptoJS[algorithm.toUpperCase()]((typeof data!=="string" && !Buffer.isBufer(data) || Array.isArray(data)) && Buffer.from(data).toString("hex") || data);
+    return CryptoJS[algorithm.toUpperCase()]((typeof data!=="string" && !Buffer.isBuffer(data) || Array.isArray(data)) && Buffer.from(data).toString("hex") || data);
 };
 
 

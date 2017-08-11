@@ -41,7 +41,7 @@ function randomNumber(min, max, type, ignoreCount=false){
     if(ignoreCount) seed = _tempSeed;
     else if(!_count){
         seed = (!_count || _count<=0) && Utils.seeder.consumePool(256) || _seed || storage.getItemSync("seed") || Utils.seeder.consumePool(256);
-        _count = Number(storage.getItemSync("count")) || parseInt(Utils.seeder.consumePool(16), 16);
+        _count = Number(storage.getItemSync("count")) || parseInt(Utils.seeder.consumePool(32), 16);
     }
     else seed = _seed;
     let operation = SHA3(seed);
@@ -53,13 +53,11 @@ function randomNumber(min, max, type, ignoreCount=false){
         storage.setItemSync("count", _count);
     }
     else _tempSeed = operation.substring(32);
-    // KerdoxNumber.setDecimalPlaces(getDecimalPlaces());
     return new KerdoxNumber(type=="float" && floatNumber(operation.substring(0, 32), min, max) || intNumber(operation.substring(0, 32), min, max));
 }
 
 function setDecimalPlaces(places){
     KerdoxNumber.setDecimalPlaces(places);
-    // BigNumber.config({DECIMAL_PLACES: places});
 }
 
 

@@ -1,4 +1,4 @@
-const BigNumber = require("bignumber.js"), [N, B] = [BigNumber.another(), Number];
+const BigNumber = require("bignumber.js"), [N, B] = [Number, BigNumber.another()];
 B.config({ERRORS: false, EXPONENTIAL_AT: 100});
 
 
@@ -18,6 +18,7 @@ K.setDecimalPlaces = function(places){
     B.config({DECIMAL_PLACES: places});
 };
 
+//DONE:110 Use some more the bigNumber properties and functions for KerdoxNumber instead of implementing them over again redundantly like an idiot id:2
 
 // KerdoxNumber Prototype functions
 
@@ -33,24 +34,29 @@ P.BigNumber = P.toBigNumber = function(){
 
 //rounds up the value to the closest value with the ammount of places given or to the nearest integer
 P.ceil = P.roundUp = function(places=0){
-    let [int, DP] = this.value.split(/\./);
-    if(!DP) return K(int);
-    if(int[0]!="-" && DP.length>=places)
-        return K(B(`${int}.${DP.substring(0, places)}`, 10).add(B(`1e-${places}`, 10)).toString());
-    do DP = DP.substring(0, places);
-    while(DP[--places]=="0");
-    return new K(DP && `${int}.${DP}` || int);
+    let factor = B(10).pow(places);
+    return new K(this.bigNumber.times(factor).ceil().div(factor).toString());
+    //
+    // let [int, DP] = this.value.split(/\./);
+    // if(!DP) return K(int);
+    // if(int[0]!="-" && DP.length>=places)
+    //     return K(B(`${int}.${DP.substring(0, places)}`, 10).add(B(`1e-${places}`, 10)).toString());
+    // do DP = DP.substring(0, places);
+    // while(DP[--places]=="0");
+    // return new K(DP && `${int}.${DP}` || int);
 };
 
 //rounds down the value to the closest value with the ammount of places given or to the nearest integer
 P.floor = P.roundDown = function(places=0){
-    let [int, DP] = this.value.toString().split(/\./);
-    if(!DP) return K(int);
-    if(int[0]=="-" && DP && DP.length>=places)
-        return new K(B(`${int}.${DP.substring(0, places)}`, 10).minus(B(`1e-${places}`, 10)).toString());
-    do DP = DP.substring(0, places);
-    while(DP[--places]=="0");
-    return new K(DP && `${int}.${DP}` || int);
+    let factor = B(10).pow(places);
+    return new K(this.bigNumber.times(factor).floor().div(factor).toString());
+    // let [int, DP] = this.value.toString().split(/\./);
+    // if(!DP) return K(int);
+    // if(int[0]=="-" && DP && DP.length>=places)
+    //     return new K(B(`${int}.${DP.substring(0, places)}`, 10).minus(B(`1e-${places}`, 10)).toString());
+    // do DP = DP.substring(0, places);
+    // while(DP[--places]=="0");
+    // return new K(DP && `${int}.${DP}` || int);
 };
 
 //rounds the value to the nearest single-precision float number
@@ -74,10 +80,12 @@ P.isZero = function(){
 
 //rounds the value to the closest value with the ammount of places given or to the nearest integer
 P.round = function(places=0){
-    let [int, DP] = this.value.split(/\./);
-    if(!DP) return K(int);
-    if(int[0]=="-") return K(N(DP[places])>=5 && K.floor(places) || K.ceil(places)); //TODO:10 test if K.floor and K.ceil work in here
-    return new K(N(DP[places])>=5 && K.ceil(places) || K.floor(places));
+    let factor = B(10).pow(places);
+    return new K(this.bigNumber.times(factor).round().div(factor).toString());
+    // let [int, DP] = this.value.split(/\./);
+    // if(!DP) return K(int);
+    // if(int[0]=="-") return K(N(DP[places])>=5 && K.floor(places) || K.ceil(places));
+    // return new K(N(DP[places])>=5 && K.ceil(places) || K.floor(places));
 };
 
 //returns the sign of the number
@@ -92,11 +100,13 @@ P.toString = function(radix=10){
 
 //truncates the number by a specified ammount of places or to the nearest integer
 P.trunc = P.truncate = P.floorRound = function(places=0){
-    let [int, DP] = this.value.split(/\./);
-    if(!DP) return K(int);
-    do DP = DP.substring(0, places);
-    while(DP[--places]=="0");
-    return new K(DP && `${int}.${DP}` || int);
+    let factor = B(10).pow(places);
+    return new K(this.bigNumber.times(factor).trunc().div(factor).toString());
+    // let [int, DP] = this.value.split(/\./);
+    // if(!DP) return K(int);
+    // do DP = DP.substring(0, places);
+    // while(DP[--places]=="0");
+    // return new K(DP && `${int}.${DP}` || int);
 };
 
 //returns the value as a Number
