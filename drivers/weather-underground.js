@@ -5,7 +5,6 @@ const fetch = require("node-fetch");
 const [{SHA3_Hex}, {removeNonDigits, celsiusToKelvin}, {weatherUnderground}] = [require("../utils/digester"), require("../utils/number-treatment"), require("../credentials")];
 
 
-//DONE:50 implement driver for WeatherUnderground API id:6
 module.exports = (latitude, longitude)=>fetch(`${weatherUnderground.url}/${weatherUnderground.keyId}/conditions/q/${latitude},${longitude}.json`).then(res=>{
     if(!res.ok) return console.log("!res.ok weather underground") || console.log(res) || false;
     return res.json().then(({current_observation: weather})=>{

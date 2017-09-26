@@ -7,17 +7,17 @@ const [Const, credentials] = [require("../constants"), require("../credentials")
 
 //drivers
 const [{
-    accuWeatherDriver, aerisDriver, apixuDriver, darkSkyDriver, devRandomDriver, msnWeatherDriver,
-    openWeatherMapDriver, weatherUndergroundDriver, worldWeatherOnlineDriver, yahooWeatherDriver, yrNoDriver
+    accuWeatherDriver, aerisDriver, apixuDriver, darkSkyDriver, devRandomDriver, msnWeatherDriver, openWeatherMapDriver,
+    weatherBitDriver, weatherUndergroundDriver, worldWeatherOnlineDriver, yahooWeatherDriver, yrNoDriver
 }, {
-    accuWeather, aeris, apixu, darkSky, devRandom, msnWeather,
-    openWeatherMap, weatherUnderground, worldWeatherOnline, yahooWeather, yrNo
+    accuWeather, aeris, apixu, darkSky, devRandom, msnWeather, openWeatherMap,
+    weatherBit, weatherUnderground, worldWeatherOnline, yahooWeather, yrNo
 }] = [require("../drivers"), credentials];
 
 
 BigNumber.config({ERRORS: false});
 storage.initSync();
-let [poolLength, populating, DB] = [1024, false];
+let [poolLength, populatePoolCalls, populating, DB] = [1024, 5, false];
 loadCitiesJSON();
 
 
@@ -39,10 +39,10 @@ function allDisabled(){
 function populatePool(){
     if(populating) return;
     populating = true;
-    let [i, promises] = [1, []];
+    let [i, promises] = [populatePoolCalls, []];
     while(i--){
         // use OpenSSL to get a random city to get data from
-        let {lat, lon, id} = DB[BigNumber(getCryptoBits(), 16).mod(DB.length).toNumber()];
+        let {lat, lon} = DB[BigNumber(getCryptoBits(), 16).mod(DB.length).toNumber()];
         if(allDisabled()) getCryptoBits(512);
         else{
             accuWeather.active && promises.push(accuWeatherDriver(lat, lon));
@@ -51,7 +51,8 @@ function populatePool(){
             darkSky.active && promises.push(darkSkyDriver(lat, lon));
             devRandom.active && promises.push(devRandomDriver());
             msnWeather.active && promises.push(msnWeatherDriver(lat, lon));
-            openWeatherMap.active && promises.push(openWeatherMapDriver(id));
+            openWeatherMap.active && promises.push(openWeatherMapDriver(lat, lon));
+            weatherBit.active && promises.push(weatherBitDriver(lat, lon));
             weatherUnderground.active && promises.push(weatherUndergroundDriver(lat, lon));
             worldWeatherOnline.active && promises.push(worldWeatherOnlineDriver(lat, lon));
             yahooWeather.active && promises.push(yahooWeatherDriver(lat, lon));
@@ -61,11 +62,7 @@ function populatePool(){
     }
     return Promise.all(promises).then(data=>{
         let newPool = data.filter(a=>a).reduce((a,b)=>`${a}${b}`, "") || getCryptoBits(512);
-        console.log("pool before", storage.getItemSync("pool"));
-        return storage.getItem("pool").then(pool=>storage.setItem("pool", `${pool || ""}${newPool}`)).then(()=>{
-            console.log("pool after", storage.getItemSync("pool"));
-            populating = false;
-        });
+        return storage.getItem("pool").then(pool=>storage.setItem("pool", `${pool || ""}${newPool}`)).then(()=>populating = false);
     }).catch(e=>{
         console.log("storage error", e);
         populating = false;
@@ -92,4 +89,13 @@ function getPoolLength(){
 }
 
 
-module.exports = {populatePool, consumePool, setPoolLength, getPoolLength};
+function getPopulatePoolCalls(){
+    return populatePoolCalls;
+}
+
+function setPopulatePoolCalls(value=5){
+    return populatePoolCalls = Math.abs(value);
+}
+
+
+module.exports = {populatePool, consumePool, setPoolLength, getPoolLength, getPopulatePoolCalls, setPopulatePoolCalls};

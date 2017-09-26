@@ -1,3 +1,4 @@
 module.exports = {
-    KerdoxNumber: require("./number")
+    KerdoxNumber: require("./number"),
+    //KerdoxStream: require("./stream")
 };

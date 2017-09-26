@@ -1,8 +1,8 @@
-const RNG = require("./RNG");
-const {computeSHA256, encodeBase64} = require("../utils");
+const [RNG, {computeSHA3, encodeBase64}] = [require("./RNG"), require("../utils")];
+
 
 function encrypt(message, key){
-    RNG.setTempSeed(computeSHA256(key.toString()).substring(32));
+    RNG.setTempSeed(computeSHA3(key.toString()).substring(32));
     let [encrypt, fromCharCode] = ["", String.fromCharCode];
     message = message.toString();
     for(let i=0; i<message.length; i++)

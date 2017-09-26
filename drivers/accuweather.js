@@ -10,7 +10,7 @@ function generateFetchKeyUrl(latitude, longitude){
 }
 
 function generateFetchUrl(Key){
-    return `${accuWeather.url}/currentcondition/v1/${Key}?apikey=${accuWeather.apiKey}&details=true`;
+    return `${accuWeather.url}/currentconditions/v1/${Key}?apikey=${accuWeather.apiKey}&details=true`;
 }
 
 module.exports = (latitude, longitude)=>fetch(generateFetchKeyUrl(latitude, longitude)).then(res=>{

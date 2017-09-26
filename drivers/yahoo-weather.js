@@ -27,7 +27,5 @@ module.exports = (latitude, longitude)=>new YQL(generateWeatherQuery(latitude, l
         astronomy: {sunrise, sunset},
         item: {condition: {temp}}}}
     }} = res;
-    let sha = SHA3_Hex(`${removeNonDigits(c2k(temp))}${[chill,direction,speed,humidity,pressure,rising,visibility,sunrise,sunset].reduce((a,b)=>`${a}${removeNonDigits(b)}`, "")}`);
-    console.log("SHA3", sha);
-    return sha;
+    return SHA3_Hex(`${removeNonDigits(c2k(temp))}${[chill,direction,speed,humidity,pressure,rising,visibility,sunrise,sunset].reduce((a,b)=>`${a}${removeNonDigits(b)}`, "")}`);
 }).catch(e=>console.log("error", e) || false);

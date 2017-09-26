@@ -13,9 +13,12 @@
     "crypto-js": "^3.1.9-1",
     "deasync-promise": "^1.0.1",
     "js-base64": "^2.1.9",
-    "node-fetch": "^1.7.1",
+    "node-fetch": "^1.7.2",
     "node-persist": "^2.1.0",
-    "xml2js": "^0.4.17",
+    "xml2js": "^0.4.18",
     "yql": "^1.0.2"
+  },
+  "devDependencies": {
+    "progress": "^2.0.0"
   }
 }

@@ -18,7 +18,6 @@ K.setDecimalPlaces = function(places){
     B.config({DECIMAL_PLACES: places});
 };
 
-//DONE:110 Use some more the bigNumber properties and functions for KerdoxNumber instead of implementing them over again redundantly like an idiot id:2
 
 // KerdoxNumber Prototype functions
 

@@ -2,10 +2,15 @@
 const [storage, deasync] = [require("node-persist"), require("deasync-promise")];
 
 //internal modules
-const {populatePool, getPoolLength} = require("../utils/seeder");
+const [{populatePool, getPoolLength}, {setMaxCountBytes, setDecimalPlaces}, config] = [require("../utils/seeder"), require("./RNG"), require("./config")];
 
-//DONE:80 [sync init] add a flag to allow clearing or not the storage, so it can be force cleared or reused in case of reinitializations id:10
+
 module.exports = options=>{
+    if(options){
+        options.maxCountBytes && setMaxCountBytes(options.maxCountBytes);
+        options.decimalPlaces && setDecimalPlaces(options.decimalPlaces);
+        options.config && config(options.config);
+    }
     storage.initSync();
     options && options.clear && storage.clearSync();
     storage.getItemSync("pool").length < getPoolLength() && deasync(populatePool());

@@ -1,26 +1,26 @@
 //external modules
-const [CryptoJS, FS] = [require("crypto-js"), require("FS")];
+const [CryptoJS, FS, {promisify}] = [require("crypto-js"), require("fs"), require("util")];
 
 //internal modules
 const [{decode: base64Decode, encode: base64Encode}, decrypt, encrypt] = [require("../utils/base64"), require("../modules/decryption"), require("../modules/encryption")];
 
-function KerdoxMessage(message){
+function KerdoxStream(message){
     this.value = message;
 }
 
-// TODO:50 Rename "KerdoxMessage" to "KerdoxStream" id:0
+// DOING:50 Rename "KerdoxMessage" to "KerdoxStream" id:0
 // KerdoxMessage shortcuts
-const [K, P, PP] = [KerdoxMessage, KerdoxMessage.prototype, KerdoxMessage.prototype.__proto__];
+const [K, P, PP] = [KerdoxStream, KerdoxStream.prototype, KerdoxStream.prototype.__proto__];
 
 
-// KerdoxMessage methods
+// KerdoxStream methods
 // TODO:70 checksum of any stream id:1
 K.checksum = function(data, algorithm){
     return CryptoJS[algorithm.toUpperCase()]((typeof data!=="string" && !Buffer.isBuffer(data) || Array.isArray(data)) && Buffer.from(data).toString("hex") || data);
 };
 
 
-// KerdoxMessage Prototype methods
+// KerdoxStream Prototype methods
 
 // function save(path, filename, callback)
 // function save(path, filename) --> returns Promise
@@ -33,7 +33,7 @@ P.save = P.saveToFile = P.writeFile = function(path, filename, callback){
         else if(typeof filename==="function") [location, callback] = [path, filename]; //save(location, callback);
         else location = `${path}${path.endsWith("/") && "" || "/"}${filename}`; //save(path, filename);
     else location = `${path}${path.endsWith("/") && "" || "/"}${filename}`; //save(path, filename, callback);
-    return FS.writeFile(location, this.value, e=>!callback && new Promise((res, rej)=>e && rej(e) || res(this)) || callback(this, e));
+    return !callback && promisify(FS.writeFile)(location, this.value) || FS.writeFile(location, this.value, e=>callback(this, e));
 };
 
 // function saveSync(path, filename) --> returns undefined
@@ -44,11 +44,11 @@ P.saveSync = P.saveToFileSync = P.writeFileSync = function(path, filename){
 };
 
 P.decrypt = function(key){
-    return new KerdoxMessage(decrypt(this.value, key));
+    return new K(decrypt(this.value, key));
 };
 
 P.encrypt = function(key){
-    return new KerdoxMessage(encrypt(this.value, key));
+    return new K(encrypt(this.value, key));
 };
 
 P.getMD5 = P.getMD5Sum = function(){
@@ -138,4 +138,4 @@ P.valueOf = function(){
 };
 
 
-module.exports = KerdoxMessage;
+module.exports = KerdoxStream;

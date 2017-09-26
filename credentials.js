@@ -6,6 +6,7 @@ module.exports = {
     devRandom: {},
     msnWeather: {url: "https://weather.service.msn.com/find.aspx"},
     openWeatherMap: {url: "https://api.openweathermap.org/data/2.5/weather"},
+    weatherBit: {url: "https://api.weatherbit.io/v1.0/"},
     weatherUnderground: {url: "https://api.wunderground.com/api"},
     worldWeatherOnline: {url: "https://api.worldweatheronline.com"},
     yahooWeather: {},

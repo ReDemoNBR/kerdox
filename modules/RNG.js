@@ -6,14 +6,19 @@ const SHA3 = Utils.computeSHA3;
 
 //init configs
 BigNumber.config({ERRORS: false, DECIMAL_PLACES: 40, EXPONENTIAL_AT: 100});
-storage.initSync();
 
 //global variables
-let _seed, _count, _tempSeed;
+let _seed, _count, _tempSeed, maxCount = 16;
+const bits = 256;
 
 
 function floatNumber(value, min, max){
+    console.log("value", value);
+    console.log("bigvalue", BigNumber(value, 16).toString());
     min = BigNumber(min, 10);
+    console.log("min", min.toString());
+    console.log("max", max.toString());
+    console.log("MAX_BIG", MAX_BIG.toString());
     // operation below: (value / (2 ** 127)) * (max - min) + min
     return BigNumber(value, 16).div(MAX_BIG).times(BigNumber(max, 10).minus(min)).plus(min).toString();
 }
@@ -21,6 +26,11 @@ function floatNumber(value, min, max){
 
 function getDecimalPlaces(){
     return BigNumber.config().DECIMAL_PLACES;
+}
+
+
+function getMaxCountBytes(){
+    return Math.log2(maxCount);
 }
 
 
@@ -33,31 +43,39 @@ function intNumber(value, min, max){
 
 function randomNumber(min, max, type, ignoreCount=false){
     type = String(type).toLowerCase();
-    type = type=="f" && "float" || type=="i" && "int";
+    type = type.startsWith("f") && "float" || "int";
     if(BigNumber(min, 10).comparedTo(BigNumber(max, 10))==1) [min, max] = [max, min];
     if(min==max) [min, max] = ["0", "1"];
+    const bitsLenghtHex = bits/4;
 
     let seed;
     if(ignoreCount) seed = _tempSeed;
     else if(!_count){
-        seed = (!_count || _count<=0) && Utils.seeder.consumePool(256) || _seed || storage.getItemSync("seed") || Utils.seeder.consumePool(256);
-        _count = Number(storage.getItemSync("count")) || parseInt(Utils.seeder.consumePool(32), 16);
+        seed = (!_count || _count<=0) && Utils.seeder.consumePool(bits) || _seed || storage.getItemSync("seed") || Utils.seeder.consumePool(bits);
+        _count = Number(storage.getItemSync("count")) || parseInt(Utils.seeder.consumePool(maxCount), 16);
     }
     else seed = _seed;
     let operation = SHA3(seed);
 
     if(!ignoreCount){
         _count--;
-        _seed = operation.substring(32);
+        _seed = operation.substring(bitsLenghtHex);
         storage.setItemSync("seed", _seed);
         storage.setItemSync("count", _count);
     }
-    else _tempSeed = operation.substring(32);
-    return new KerdoxNumber(type=="float" && floatNumber(operation.substring(0, 32), min, max) || intNumber(operation.substring(0, 32), min, max));
+    else _tempSeed = operation.substring(bitsLenghtHex);
+    return new KerdoxNumber(type=="float" && floatNumber(operation.substring(0, bitsLenghtHex), min, max) || intNumber(operation.substring(0, bitsLenghtHex), min, max));
 }
 
 function setDecimalPlaces(places){
     KerdoxNumber.setDecimalPlaces(places);
+}
+
+
+function setMaxCountBytes(bytes){
+    bytes >>= 0;
+    maxCount = 2**(bytes*8);
+    return getMaxCountBytes();
 }
 
 
@@ -67,4 +85,4 @@ function setTempSeed(seed){
 }
 
 
-module.exports = {getDecimalPlaces, randomNumber, setDecimalPlaces, setTempSeed};
+module.exports = {getDecimalPlaces, getMaxCountBytes, randomNumber, setDecimalPlaces, setMaxCountBytes, setTempSeed};
