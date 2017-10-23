@@ -1,6 +1,5 @@
 node_modules/
 .node-persist/
-package-lock.json
 test*.js
 test.js
 test*.json
