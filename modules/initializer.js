@@ -6,7 +6,7 @@ const [{populatePool, getPoolLength}, {setMaxCountBytes, setDecimalPlaces}, conf
 
 
 module.exports = (cb, options)=>{
-    if(!options && typeof cb==="object") [options, cb] = [cb, options];
+    if((!options || typeof options==="function") && typeof cb==="object") [options, cb] = [cb, options];
     if(options){
         options.maxCountBytes && setMaxCountBytes(options.maxCountBytes);
         options.decimalPlaces && setDecimalPlaces(options.decimalPlaces);
