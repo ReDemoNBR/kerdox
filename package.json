@@ -1,6 +1,6 @@
 {
   "name": "kerdox",
-  "version": "0.1.0-1",
+  "version": "0.1.0",
   "description": "Random Number Generator",
   "main": "kerdox.js",
   "scripts": {
