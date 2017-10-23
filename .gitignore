@@ -1,7 +1,6 @@
-.git/
 node_modules/
-package-lock.json
 .node-persist/
+package-lock.json
 test*.js
 test.js
 test*.json
