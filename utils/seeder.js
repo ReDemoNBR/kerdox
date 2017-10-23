@@ -58,7 +58,6 @@ function populatePool(){
             yahooWeather.active && promises.push(yahooWeatherDriver(lat, lon));
             yrNo.active && promises.push(yrNoDriver(lat, lon));
         }
-        //TODO:60 Seek for more free Weather APIs [INFINITE ] id:4
     }
     return Promise.all(promises).then(data=>{
         let newPool = data.filter(a=>a).reduce((a,b)=>`${a}${b}`, "") || getCryptoBits(512);

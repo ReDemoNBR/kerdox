@@ -48,7 +48,6 @@ function randomFloat(min, max){
         if(!min) [min, max] = ["0", "1"];
         else [min, max] = ["0", min];
     }
-    console.log(`generating a random float: [${min}, ${max}[`);
     return RNG.randomNumber(String(min), String(max), "float");
 }
 

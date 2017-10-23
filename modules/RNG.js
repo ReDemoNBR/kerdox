@@ -13,13 +13,8 @@ const bits = 256;
 
 
 function floatNumber(value, min, max){
-    console.log("value", value);
-    console.log("bigvalue", BigNumber(value, 16).toString());
     min = BigNumber(min, 10);
-    console.log("min", min.toString());
-    console.log("max", max.toString());
-    console.log("MAX_BIG", MAX_BIG.toString());
-    // operation below: (value / (2 ** 127)) * (max - min) + min
+    // operation below: (value / (2 ** 256)) * (max - min) + min
     return BigNumber(value, 16).div(MAX_BIG).times(BigNumber(max, 10).minus(min)).plus(min).toString();
 }
 
@@ -46,7 +41,7 @@ function randomNumber(min, max, type, ignoreCount=false){
     type = type.startsWith("f") && "float" || "int";
     if(BigNumber(min, 10).comparedTo(BigNumber(max, 10))==1) [min, max] = [max, min];
     if(min==max) [min, max] = ["0", "1"];
-    const bitsLenghtHex = bits/4;
+    const bitsLengthHex = bits/4;
 
     let seed;
     if(ignoreCount) seed = _tempSeed;
@@ -59,12 +54,12 @@ function randomNumber(min, max, type, ignoreCount=false){
 
     if(!ignoreCount){
         _count--;
-        _seed = operation.substring(bitsLenghtHex);
+        _seed = operation.substring(bitsLengthHex);
         storage.setItemSync("seed", _seed);
         storage.setItemSync("count", _count);
     }
-    else _tempSeed = operation.substring(bitsLenghtHex);
-    return new KerdoxNumber(type=="float" && floatNumber(operation.substring(0, bitsLenghtHex), min, max) || intNumber(operation.substring(0, bitsLenghtHex), min, max));
+    else _tempSeed = operation.substring(bitsLengthHex);
+    return new KerdoxNumber(type=="float" && floatNumber(operation.substring(0, bitsLengthHex), min, max) || intNumber(operation.substring(0, bitsLengthHex), min, max));
 }
 
 function setDecimalPlaces(places){

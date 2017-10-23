@@ -6,6 +6,8 @@ const [{SHA3_Hex}, {removeNonDigits, celsiusToKelvin: c2k, metersPerSecToKilomet
     require("../utils/digester"), require("../utils/number-treatment"), require("../credentials")
 ];
 
+const xmlParsePromise = promisify(xmlParse);
+
 
 function generateFetchUrl(latitude, longitude){
     return `${yrNo.url}/?lat=${latitude};lon=${longitude}`;
@@ -14,7 +16,7 @@ function generateFetchUrl(latitude, longitude){
 
 module.exports = (latitude, longitude)=>fetch(generateFetchUrl(latitude, longitude)).then(res=>{
     if(!res.ok) return console.log("!res.ok yr-no") || console.log(res) || false;
-    return res.text().then(xml=>promisify(xmlParse)(xml)).then(({weatherdata: {product: [{time: [{location: [weather]}]}]}})=>{
+    return res.text().then(xml=>xmlParsePromise(xml)).then(({weatherdata: {product: [{time: [{location: [weather]}]}]}})=>{
         let {
             temperature: [{$: {value: temperature}}],
             windDirection: [{$: {deg: windDir}}],

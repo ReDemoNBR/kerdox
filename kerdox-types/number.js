@@ -5,8 +5,8 @@ B.config({ERRORS: false, EXPONENTIAL_AT: 100});
 //constructor
 function KerdoxNumber(number){
     this.value = number;
-    this.__proto__.bigNumber = B(this.value, 10);
-    this.__proto__.number = N(this.value);
+    this.bigNumber = B(number, 10);
+    this.number = N(number);
 }
 
 // KerdoxNumber shortcuts
@@ -47,7 +47,7 @@ P.ceil = P.roundUp = function(places=0){
 
 //rounds down the value to the closest value with the ammount of places given or to the nearest integer
 P.floor = P.roundDown = function(places=0){
-    let factor = B(10).pow(places);
+    let factor = new B(10).pow(places);
     return new K(this.bigNumber.times(factor).floor().div(factor).toString());
     // let [int, DP] = this.value.toString().split(/\./);
     // if(!DP) return K(int);
@@ -79,7 +79,7 @@ P.isZero = function(){
 
 //rounds the value to the closest value with the ammount of places given or to the nearest integer
 P.round = function(places=0){
-    let factor = B(10).pow(places);
+    let factor = B(10, 10).pow(places);
     return new K(this.bigNumber.times(factor).round().div(factor).toString());
     // let [int, DP] = this.value.split(/\./);
     // if(!DP) return K(int);
